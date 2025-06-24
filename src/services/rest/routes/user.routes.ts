@@ -1,18 +1,31 @@
-import express from 'express';
+import express,{Request,Response} from 'express';
 import {loginHandler,registerHandler} from '../controller/user.controller';
+import {UserDocument} from '../model/user.model';
 
 const router=express.Router();
 
-router.get('/login',(req,res)=>{
+declare global{
+    namespace Express{
+        interface Request{
+            user?:UserDocument;
+        }
+    }
+}
+
+router.get('/login',(req:Request,res:Response)=>{
     res.render('login');
 })
 
-router.get('/register',(req,res)=>{
+router.get('/register',(req:Request,res:Response)=>{
     res.render('register');
 })
 
-router.get('/logout',(req,res)=>{
+router.get('/logout',(req:Request,res:Response)=>{
     res.redirect('/api/login');
+})
+
+router.get('/home',(req:Request,res:Response)=>{
+    res.render('home',{user:req.user});
 })
 
 router.post('/login',loginHandler);
